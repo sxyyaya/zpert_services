@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://dev.zpert.com/wasm/zpert.js"></script>
+    <script src="https://dev.zpert.com/wasm/project.min.js"></script>
+    <script src="./libs/zpertData.js"></script>
+  </head>
+  <body>
+    <div
+      id="zpertView"
+      style="
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding:0;
+        position: relative;
+      "
+    >
+    </div>
+    <script type="text/javascript">
+       const zpert = {
+        init:function(){
+          zpert.zpertViewInit();
+          zpert.getMessage();
+          zpert.postMessage();
+        },
+        zpertViewInit:function(){
+          let zpertDraw = {
+            type: "ershiye",
+            subcontractors: "",
+            bim5dProductUsers: "",
+            isTemplate: false,
+          };
+          const viewerInit = new ZPlan.Previewer(
+              "https://dev.zpert.com/wasm/zpert.wasm",
+              document.querySelector("#zpertView"),
+              zpertDraw, 
+              function () { 
+              },
+              function (data) {
+                console.log(data);
+              }
+          );
+          viewerInit.load(JSON.stringify(zpertData), [])
+          
+        },
+        getMessage(){
+          window.addEventListener('message',function(e){
+            console.log(e);
+          })
+        },
+        postMessage(){
+          const zpertData = { 
+            type: "WASM",
+            data:{
+              action:"0",
+              paln:"",
+              idx:"",
+              position:""
+            }
+          }
+          window.parent.postMessage(zpertData, "*");
+        }
+      }
+      //$(function(){
+        zpert.init()
+      //})
+      
+    </script>
+  </body>
+</html>
